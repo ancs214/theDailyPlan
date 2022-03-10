@@ -1,37 +1,73 @@
-// ## User Story
 
-// ```
-// AS AN employee with a busy schedule
-// I WANT to add important events to a daily planner
-// SO THAT I can manage my time effectively
-// ```
 
-// ## Acceptance Criteria
 
-// ```
-// GIVEN I am using a daily planner to create a schedule
-// WHEN I open the planner
-// THEN the current day is displayed at the top of the calendar
-// WHEN I scroll down
-// THEN I am presented with timeblocks for standard business hours
-// WHEN I view the timeblocks for that day
-// THEN each timeblock is color coded to indicate whether it is in the past, present, or future
-// WHEN I click into a timeblock
-// THEN I can enter an event
-// WHEN I click the save button for that timeblock
-// THEN the text for that event is saved in local storage
-// WHEN I refresh the page
-// THEN the saved events persist
-// ```
+//display current date when calendar page opens
+//obtain date with moment formatting
+let todaysDate = moment().format('dddd, MMMM Do');
+//add text to p element, id=currentDay
+$("#currentDay").append(todaysDate);
 
-// The following animation demonstrates the application functionality:
 
-// ![Work Day Scheduler app with color-coded time slots shows a new event being typed in the 5PM slot.](./Assets/05-third-party-apis-homework-demo.gif)
 
-// ## Review
+//on saveBtn click, save text to local storage
+$(".saveBtn").on("click", function() {
+//set DOM variable to text area content
+let textArea = $(this).siblings(".textarea").val();
+//set key variable to equal parent attribute representing hour of the day
+let hour = $(this).parent().attr("id");
+// save DOM var to local storage
+localStorage.setItem(hour, textArea);
+})
 
-// You are required to submit the following for review:
+//load local storage values on window load
+$(document).ready(function() {
+    //set var for the hour div id to equal localStorage value
+    let hour = localStorage.getItem("hour9");
+    //set var for textarea id
+    let hourEl = document.getElementById("9");
+    //set innerHTML equal to localStorage value
+    hourEl.innerHTML = hour;
 
-// * The URL of the deployed application.
+    hour =localStorage.getItem("hour10");
+    document.getElementById("10").innerHTML = hour;
 
-// * The URL of the GitHub repository. Give the repository a unique name and include a README describing the project.
+    $("#11").val(localStorage.getItem("hour11"));
+    $("#12").val(localStorage.getItem("hour12"));
+    $("#13").val(localStorage.getItem("hour1"));
+    $("#14").val(localStorage.getItem("hour2"));
+    $("#15").val(localStorage.getItem("hour3"));
+    $("#16").val(localStorage.getItem("hour4"));
+    $("#17").val(localStorage.getItem("hour5"));
+//FOUND THREE DIFFERENT WAYS TO GETITEM FROM LOCALSTORAGE
+//IS THERE A FUNCTION TO MAKE THIS EASIER?
+}) 
+
+
+//function to audit time of day
+let auditTime = function() {
+    //set variable for time of day
+    let timeNow = moment().hour();
+    
+    //use jquery .each to iterate over textarea ids
+    $(".textarea").each(function() {
+        //define variable to the id attribute
+        let currentHour = $(this).attr("id");
+        if (timeNow > currentHour) {
+            $(this).addClass("past");
+            $(this).removeClass("present future");
+        } else if (timeNow == currentHour) {
+            $(this).addClass("present");
+            $(this).removeClass("past future");
+        } else if (timeNow < currentHour) {
+            $(this).addClass("future");
+            $(this).removeClass("past present");
+        }
+    })
+}
+
+auditTime();
+
+
+
+
+
